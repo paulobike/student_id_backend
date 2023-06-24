@@ -1,0 +1,5 @@
+.vscode
+dist
+static/passports/*
+.env
+node_modules
