@@ -46,9 +46,9 @@ export const isStudentLoggedIn = async (req: Request, res: Response, next: NextF
 }
 
 export const isStudentActivated = async (req: Request, res: Response, next: NextFunction) => {
-  if(!req.user || !(req.user as StudentDocType).is_activated?.value) {
-    return sendErrorResponse(res, StatusCodes.UNAUTHORIZED, 'Please change your password to activate your account');
-  }
+  // if(!req.user || !(req.user as StudentDocType).is_activated?.value) {
+  //   return sendErrorResponse(res, StatusCodes.UNAUTHORIZED, 'Please change your password to activate your account');
+  // }
   next();
 }
 

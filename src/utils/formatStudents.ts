@@ -8,9 +8,9 @@ export const formatStudent = (student: StudentDocType) => ({
   lastname: student.lastname,
   reg_number: student.reg_number,
   department: student.department,
-  level: student.level,
-  department_code: student.department_code,
-  department_num: student.department_num,
+  faculty: student.faculty,
+  gender: student.gender,
+  dob: student.dob,
   is_activated: {
     value: student.is_activated.value,
     date: student.is_activated.date || null,

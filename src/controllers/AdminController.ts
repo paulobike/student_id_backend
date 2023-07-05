@@ -70,7 +70,7 @@ export class AdminController extends BaseController {
     }
 
     async registerStudent(req: Request, res: Response, next: NextFunction) {
-        const { email, phone, firstname, lastname, reg_number, department, level, department_code, department_num } = req.body;
+        const { email, phone, firstname, lastname, reg_number, department, gender, faculty, dob } = req.body;
 
         if (!reg_number) return this.sendErrorResponse(res, StatusCodes.BAD_REQUEST, "Reg number cannot be empty", null);
         if (!department) return this.sendErrorResponse(res, StatusCodes.BAD_REQUEST, "Please enter a department", null);
@@ -83,10 +83,10 @@ export class AdminController extends BaseController {
             if (phoneCount > 0) return this.sendErrorResponse(res, StatusCodes.NOT_FOUND, "A student with the phone number already exists", null);
             if (regNumberCount > 0) return this.sendErrorResponse(res, StatusCodes.NOT_FOUND, "A student with the reg number already exists", null);
 
-            const student = new this.Student({ email, phone, firstname, lastname, reg_number, department, level, department_code, department_num });
+            const student = new this.Student({ email, phone, firstname, lastname, reg_number, department, gender, faculty, dob });
             await student.save();
 
-            this.sendSuccessResponse(res, StatusCodes.OK, "Operation successful", { reg_number, department, level: student.level });
+            this.sendSuccessResponse(res, StatusCodes.OK, "Operation successful", { reg_number, department, gender: student.gender });
         } catch (error) {
             console.log(error);
             this.sendErrorResponse(res, StatusCodes.INTERNAL_SERVER_ERROR, "An unexpected error occured", null);

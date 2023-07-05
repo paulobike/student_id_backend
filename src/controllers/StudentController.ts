@@ -27,7 +27,7 @@ export class StudentController extends BaseController {
         let { reg_number, password } = req.body;
 
         if (!reg_number || !password) return this.sendErrorResponse(res, StatusCodes.BAD_REQUEST, "Fields cannot be empty", null);
-        reg_number = reg_number.trim().toLowerCase();
+        reg_number = reg_number.trim();
 
         try {
             const student = await this.Student.findOne({ reg_number });
@@ -41,7 +41,7 @@ export class StudentController extends BaseController {
                 if(password.toLowerCase() != student.lastname.toLowerCase()) {
                     return this.sendErrorResponse(res, StatusCodes.UNAUTHORIZED, 'Invalid credentials', null);
                 }
-                additionalMsg = ' , please proceed to change your password';
+                additionalMsg = /**' , please proceed to change your password'*/ "";
             }
             const metadata = {
                 id: student._id,
@@ -80,7 +80,7 @@ export class StudentController extends BaseController {
     async uploadPassport(req: Request, res: Response, next: NextFunction) {
         const student = req.user as StudentDocType;
         if (!req.file) return this.sendErrorResponse(res, StatusCodes.BAD_REQUEST, 'No image was specified', null);
-        console.log(req.host)
+
         try {
             const oldPassport = student.passport? path.join(__dirname, '../static', student.passport): null;
             if(oldPassport && existsSync(oldPassport)) rmSync(oldPassport);

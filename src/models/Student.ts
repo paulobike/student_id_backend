@@ -9,9 +9,9 @@ interface StudentType {
   password: string;
   reg_number: string;
   department: string;
-  department_code: string;
-  department_num: string;
-  level: number;
+  faculty: string;
+  gender: string;
+  dob: string;
   passport: string;
   is_activated: {
     value: boolean;
@@ -30,11 +30,11 @@ const studentSchema = new Schema<StudentType>(
     phone: { type: String, trim: true },
     lastname: { type: String, trim: true },
     password: { type: String },
-    reg_number: { type: String, lowercase: true },
+    reg_number: { type: String },
     department: { type: String, trim: true, lowercase: true },
-    department_code: { type: String, trim: true, uppercase: true },
-    department_num: { type: String, trim: true },
-    level: { type: Number, default: 100 },
+    faculty: { type: String, trim: true, uppercase: true },
+    gender: { type: String, trim: true, lowercase: true },
+    dob: { type: String, trim: true },
     passport: { type: String },
     is_activated: {
       value: { type: Boolean, default: false },
