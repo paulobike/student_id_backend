@@ -26,6 +26,6 @@ studentRouter.post('/activate', isStudentLoggedIn, studentController.activate.bi
 
 studentRouter.get('/profile', isStudentLoggedIn, isStudentActivated, studentController.getProfile.bind(studentController));
 
-studentRouter.post('/profile/passport', isStudentLoggedIn, isStudentActivated, uploadFile.single('passport'), studentController.uploadPassport.bind(studentController));
+// studentRouter.post('/profile/passport', isStudentLoggedIn, isStudentActivated, uploadFile.single('passport'), studentController.uploadPassport.bind(studentController));
 
 export default studentRouter;

@@ -10,7 +10,7 @@ import path from 'path';
 const storage = multer.diskStorage({
   destination: path.join(__dirname, '../static/passports'),
   filename: (req, file, cb) => {
-    let filename = (req.user as StudentDocType).reg_number + '_' + Date.now() + '.' + file.mimetype.split('/')[1];
+    let filename = (req.body as StudentDocType).lastname + '_' + Date.now() + '.' + file.mimetype.split('/')[1];
     cb(null, filename);
   }
 });

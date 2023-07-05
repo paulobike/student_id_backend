@@ -4,7 +4,7 @@ import { AdminController } from '../controllers/AdminController';
 import Admin from '../models/Admin';
 import Student from '../models/Student';
 import { formatStudent } from '../utils/formatStudents';
-import { isAdminLoggedIn } from '../middleware';
+import { isAdminLoggedIn, uploadFile } from '../middleware';
 
 const routerOptions: RouterOptions = {
   mergeParams: true,
@@ -26,7 +26,7 @@ adminRouter.post('/login', adminController.login.bind(adminController));
 
 adminRouter.post('/', adminController.registerAdmin.bind(adminController));
 
-adminRouter.post('/student', isAdminLoggedIn, adminController.registerStudent.bind(adminController));
+adminRouter.post('/student', isAdminLoggedIn, uploadFile.single('passport'), adminController.registerStudent.bind(adminController));
 
 adminRouter.get('/student', isAdminLoggedIn, adminController.getStudents.bind(adminController));
 

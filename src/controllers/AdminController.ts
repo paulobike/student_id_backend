@@ -7,6 +7,7 @@ import { AdminModelType } from "../models/Admin";
 import { StudentDocType, StudentModelType } from "../models/Student";
 import { FormatStudentType } from "../utils/formatStudents";
 import { Types } from "mongoose";
+import { existsSync, rmSync } from "fs";
 
 export class AdminController extends BaseController {
     Admin: AdminModelType;
@@ -72,23 +73,41 @@ export class AdminController extends BaseController {
     async registerStudent(req: Request, res: Response, next: NextFunction) {
         const { email, phone, firstname, lastname, reg_number, department, gender, faculty, dob } = req.body;
 
-        if (!reg_number) return this.sendErrorResponse(res, StatusCodes.BAD_REQUEST, "Reg number cannot be empty", null);
-        if (!department) return this.sendErrorResponse(res, StatusCodes.BAD_REQUEST, "Please enter a department", null);
+        if (!req.file) return this.sendErrorResponse(res, StatusCodes.BAD_REQUEST, 'No passport photograph was included', null);
+        if (!reg_number) {
+            if(existsSync(req.file.path)) rmSync(req.file.path);
+            return this.sendErrorResponse(res, StatusCodes.BAD_REQUEST, "Reg number cannot be empty", null);
+        }
+        if (!department) {
+            if(existsSync(req.file.path)) rmSync(req.file.path);
+            return this.sendErrorResponse(res, StatusCodes.BAD_REQUEST, "Please enter a department", null);
+        }
         try {
             const emailCount = await this.Student.countDocuments({ email });
             const phoneCount = await this.Student.countDocuments({ phone });
             const regNumberCount = await this.Student.countDocuments({ reg_number });
 
-            if (emailCount > 0) return this.sendErrorResponse(res, StatusCodes.NOT_FOUND, "A student with the email already exists", null);
-            if (phoneCount > 0) return this.sendErrorResponse(res, StatusCodes.NOT_FOUND, "A student with the phone number already exists", null);
-            if (regNumberCount > 0) return this.sendErrorResponse(res, StatusCodes.NOT_FOUND, "A student with the reg number already exists", null);
+            if (emailCount > 0) {
+                if(existsSync(req.file.path)) rmSync(req.file.path);
+                return this.sendErrorResponse(res, StatusCodes.NOT_FOUND, "A student with the email already exists", null);
+            }
+            if (phoneCount > 0) {
+                if(existsSync(req.file.path)) rmSync(req.file.path);
+                return this.sendErrorResponse(res, StatusCodes.NOT_FOUND, "A student with the phone number already exists", null);
+            }
+            if (regNumberCount > 0) {
+                if(existsSync(req.file.path)) rmSync(req.file.path);
+                return this.sendErrorResponse(res, StatusCodes.NOT_FOUND, "A student with the reg number already exists", null);
+            }
+            const passport = '/passports/' + req.file.filename;
 
-            const student = new this.Student({ email, phone, firstname, lastname, reg_number, department, gender, faculty, dob });
+            const student = new this.Student({ email, phone, firstname, lastname, reg_number, department, gender, faculty, dob, passport });
             await student.save();
 
             this.sendSuccessResponse(res, StatusCodes.OK, "Operation successful", { reg_number, department, gender: student.gender });
         } catch (error) {
             console.log(error);
+            if(existsSync(req.file.path)) rmSync(req.file.path);
             this.sendErrorResponse(res, StatusCodes.INTERNAL_SERVER_ERROR, "An unexpected error occured", null);
         }
     }
